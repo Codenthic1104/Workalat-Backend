@@ -12,8 +12,6 @@ let cloudinary = require("cloudinary");
 const twilio = require('twilio');
 
 
-
- 
 //Cors Setup 
 let corsOptions = {
     origin: ["http://localhost:3000","http://localhost:3001","https://workalat-frontend-x8t9.vercel.app" ],
