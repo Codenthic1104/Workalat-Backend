@@ -17,7 +17,7 @@ let ProjectSchema  = new mongoose.Schema({
     lowercase: true,
     default : ""
    },
-   clientUsername : {
+   clientUsername : { 
         type  : String,
         lowercase: true,
         default : ""
@@ -189,12 +189,12 @@ let ProjectSchema  = new mongoose.Schema({
         lowercase: true,   
         default : "unawarded"
     },
-    projectStatus : {//active/completed/    
+    projectStatus : {//active/completed/  
         type : String,  
         lowercase: true,   
         default : "active"
     },
-    awardedId : {
+    awardedId : {  //id of awarded professional
         type : String,
         default : ""
     }, 

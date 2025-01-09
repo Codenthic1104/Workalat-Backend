@@ -17,7 +17,7 @@ let ProfessionalDataSchema  = new mongoose.Schema({
    },
    professionalFullName : { 
         type : String,
-        lowercase : true,
+        lowercase : true, 
         default : ""
    }, 
 

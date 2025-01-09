@@ -119,39 +119,39 @@ async function getSingleProjectController(req, res){
         else if(need === "proposals"){
             if(userType === "client"){
                 
-            let projectsData= await ProjectsData.findOne({$and : [{_id : projectId}, {clientId :userId }]}).select({
-                proposals : 1,
-                awardedStatus : 1,
-                projectStatusClient : 1,
-                serviceNeeded : 1,
-                serviceLocationPostal : 1,
-                serviceLocationTown : 1,
-                serviceTitle : 1
-            });
-             // Convert the document to a plain object to allow modifications
-            let projectsDataObj = projectsData.toObject();
+                let projectsData= await ProjectsData.findOne({$and : [{_id : projectId}, {clientId :userId }]}).select({
+                    proposals : 1,
+                    awardedStatus : 1,
+                    projectStatusClient : 1,
+                    serviceNeeded : 1,
+                    serviceLocationPostal : 1,
+                    serviceLocationTown : 1,
+                    serviceTitle : 1
+                });
+                // Convert the document to a plain object to allow modifications
+                let projectsDataObj = projectsData.toObject();
 
-            let finalData = await Promise.all(projectsDataObj.proposals.map(async (val, i)=>{
-                    let professionalData = await ProfessionalsData.findOne({_id : val.professionalId}).select({
-                        professionalCountry : 1, 
-                    });
-                    console.log("Professional Data", professionalData);
-                    let updateData = { ...val._doc }; // "_doc" is used to access the actual document
-                    if(professionalData !== null){
-                        updateData.professionalCountry = professionalData.professionalCountry;
-                    };
-                    return {
-                        ...val, // Retain original proposal properties
-                        ...(professionalData && { professionalCountry: professionalData.professionalCountry }) // Add professionalCountry only if available
-                    };
-                
-            }));
-            projectsDataObj.proposals = finalData;
-            res.status(200).json({status : "success", userStatus : "SUCCESS", message : "Data fetched successfully", data: projectsDataObj});
+                let finalData = await Promise.all(projectsDataObj.proposals.map(async (val, i)=>{
+                        let professionalData = await ProfessionalsData.findOne({_id : val.professionalId}).select({
+                            professionalCountry : 1, 
+                        });
+                        console.log("Professional Data", professionalData);
+                        let updateData = { ...val._doc }; // "_doc" is used to access the actual document
+                        if(professionalData !== null){
+                            updateData.professionalCountry = professionalData.professionalCountry;
+                        };
+                        return {
+                            ...val, // Retain original proposal properties
+                            ...(professionalData && { professionalCountry: professionalData.professionalCountry }) // Add professionalCountry only if available
+                        };
+                    
+                }));
+                projectsDataObj.proposals = finalData;
+                res.status(200).json({status : "success", userStatus : "SUCCESS", message : "Data fetched successfully", data: projectsDataObj});
             }
             else{
                 
-            let projectsData= await ProjectsData.findOne({$and : [{_id : projectId}, {awardedProfessionalId :userId }]}).select({
+            let projectsData= await ProjectsData.findOne({$and : [{_id : projectId}, {"proposals.professionalId" :userId }]}).select({
                 proposals : 1,
                 awardedStatus : 1,
                 projectStatusClient : 1,
@@ -160,6 +160,7 @@ async function getSingleProjectController(req, res){
                 serviceLocationTown : 1,
                 serviceTitle : 1
             });
+            console.log(projectsData);
             // Convert the document to a plain object to allow modifications
             let projectsDataObj = projectsData.toObject();
 
